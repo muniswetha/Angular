@@ -9,7 +9,8 @@ import { Reason } from './reason.model';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  public reasons: Reason[]
+  public reasons: Reason[];
+  private reasonsCopyFromServer: Reason[];
   public selectedReason = new Reason();
   constructor(private adminService: AdminService) { }
 
@@ -20,6 +21,7 @@ export class HomeComponent implements OnInit {
   resonCodeList() {
   this.adminService.reasonCodeList().subscribe((data) => {
       this.reasons = data;
+      Object.assign(this.reasonsCopyFromServer,this.reasons);
     }, (err) => {
       console.log(err.message);
     });;
@@ -33,10 +35,16 @@ export class HomeComponent implements OnInit {
     this.adminService.updateReason(this.selectedReason)
       .subscribe((data) => {
         this.reasons = data;
+        Object.assign(this.reasonsCopyFromServer,this.reasons);
       }, (err) => {
         console.log(err.message);
       });
 
   }
-
+  
+  public onReset() {
+    {
+            Object.assign(this.reasons,this.reasonsCopyFromServer);      
+            this.selectedReason = new Reason();
+    }
 }
