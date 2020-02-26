@@ -45,6 +45,6 @@ export class HomeComponent implements OnInit {
   public onReset() {
     {
             Object.assign(this.reasons,this.reasonsCopyFromServer);      
-            this.selectedReason = new Reason();
+            this.selectedReason = this.reasons.find(x => x.reasoncode == this.selectedReason.reasoncode);
     }
 }
