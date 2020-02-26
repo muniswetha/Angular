@@ -21,21 +21,22 @@ export class HomeComponent implements OnInit {
   resonCodeList() {
   this.adminService.reasonCodeList().subscribe((data) => {
       this.reasons = data;
-      Object.assign(this.reasonsCopyFromServer,this.reasons);
+    this.reasonsCopyFromServer=  JSON.parse(JSON.stringify(this.reasons));
     }, (err) => {
       console.log(err.message);
-    });;
+    });
   }
 
   public changeSuit(event) {
-    this.selectedReason = this.reasons.find(x => x.reasoncode == event.target.value);
+    var selReason = this.reasons.find(x => x.reasoncode == event.target.value);
+    this.selectedReason =selReason ? selReason: new Reason();
   }
 
   public onsubmit() {
     this.adminService.updateReason(this.selectedReason)
       .subscribe((data) => {
         this.reasons = data;
-        Object.assign(this.reasonsCopyFromServer,this.reasons);
+        this.reasonsCopyFromServer=  JSON.parse(JSON.stringify(this.reasons));
       }, (err) => {
         console.log(err.message);
       });
@@ -44,7 +45,8 @@ export class HomeComponent implements OnInit {
   
   public onReset() {
     {
-            Object.assign(this.reasons,this.reasonsCopyFromServer);      
+      this.reasons=  JSON.parse(JSON.stringify(this.reasonsCopyFromServer));
             this.selectedReason = this.reasons.find(x => x.reasoncode == this.selectedReason.reasoncode);
     }
+}
 }
