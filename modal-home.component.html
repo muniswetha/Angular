@@ -1,0 +1,97 @@
+<form id="">
+  <div class="card " style="max-width: 50rem; max-height: 100rem;">
+      <div class="card-header">Header</div>
+      <div class="card-body">
+          <div class="row">
+              <div class="col-4">col-4</div>
+              <div class="col-4">
+  
+                  <div class="form-group">
+                      <label for="sel1">Select list:</label>
+                      <select class="form-control" id="sel1" (change)="changeSuit($event)" name="sel1" [ngModel]="selectedReason.reasoncode">
+                        <option></option>  
+                        <option value={{s.reasoncode}} *ngFor="let s of reasons">{{s.reasoncode | uppercase}}</option>
+                      </select>
+                    </div>
+  
+                 
+              </div>
+              <div class="col-4">col-4</div>
+            </div>     
+  
+            <div class="row">
+              <div class="col-4">col-4</div>
+              <div class="col-4">
+                  <div class="form-group">
+                      <label for="usr">Name:</label>
+                      <input type="text" tabindex="-1" name="type" readonly [(ngModel)]="selectedReason.type" class="form-control text-uppercase" id="usr">
+                    </div>               
+              </div>
+              <div class="col-4">col-4</div>
+            </div>     
+  
+            <div class="row">
+              <div class="col-4">col-4</div>
+              <div class="col-4">
+                  <div class="form-group">
+                      <label for="comment1">Comment:</label>
+                      <textarea class="form-control text-uppercase" tabindex="-1" name="description" readonly [(ngModel)]="selectedReason.description"  rows="2" id="comment1"></textarea>
+                    </div>               
+              </div>
+              <div class="col-4">col-4</div>
+            </div>     
+  
+      
+          <div class="row">
+              <div class="col-4">col-4</div>
+          </div>     
+  
+          <div class="row">
+            <div class="col-4">col-4</div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="carrier">Comment:</label>
+                    <textarea class="form-control" name="carrier"   [(ngModel)]="selectedReason.carrier"  rows="2" id="carrier"></textarea>
+                  </div>               
+            </div>
+            <div class="col-4">col-4</div>
+          </div>  
+        
+          
+          <div class="row">
+              <button type="button" (click)="onsubmit()"  class="btn btn-info">Save</button>&nbsp;&nbsp;
+              <button type="button" data-toggle="modal" data-target="#ModalPopUpForReset"
+               class="btn btn-info">Reset</button>&nbsp;&nbsp;              
+               <button type="button"  data-toggle="modal" data-target="#ModalPopUpForResetCancel" class="btn btn-info">cancel</button>
+          </div>
+          
+  <div>
+     
+   
+    <app-modal-dialog
+    [divId]="'ModalPopUpForReset'" 
+    [title]="'Confirmation'" 
+    [infoMessage]="'Are you sure you want to 
+    Reset this record?'" 
+    (confirmation)="onReset($event)"   
+    [cnfBtnNames]="['Yes','No']"
+    ></app-modal-dialog>
+
+    
+  
+  <app-modal-dialog
+  (close)="cancelConfirm($event)" 
+  [divId]="'ModalPopUpForResetCancel'" 
+  [title]="'Confirmation'" 
+  [infoMessage]="'Are you sure you want to 
+  Cancel this record?'" 
+  (confirmation)="confirmAlert($event)"
+  [cnfBtnNames]="['Save','Cancel']"
+  ></app-modal-dialog>
+  
+</div>
+
+      </div>
+    </div>
+  </form>  
+  
