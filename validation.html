@@ -1,0 +1,17 @@
+<div class="row">
+            <div class="col-4">col-4</div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="carrier">Comment:</label>
+                    <textarea class="form-control" name="carrier" required
+                     [ngClass]="{'border-danger': shouldValidateForm && selectedReasonCarrier && selectedReasonCarrier.errors}"
+                      [(ngModel)]="selectedReason.carrier"  
+                    rows="2" id="carrier" #selectedReasonCarrier = "ngModel"></textarea>
+                  </div>               
+            </div>
+            <div class="col-4">col-4</div>
+          </div>  
+       
+          <div *ngIf = "shouldValidateForm" class="alert alert-danger" >
+            <div *ngIf = "selectedReasonCarrier && selectedReasonCarrier.errors"> Carrier Required</div>
+          </div>
