@@ -12,12 +12,22 @@ export class HomeComponent implements OnInit {
   public reasons: Reason[];
   private reasonsCopyFromServer: Reason[];
   public selectedReason = new Reason();
-  constructor(private adminService: AdminService) { }
+  constructor(private adminService: AdminService,public dialogService: DialogService) { }
 
   ngOnInit() {
     this.resonCodeList();
   }
+ canDeactivate(): Observable<boolean> | boolean {
+    debugger;
+    var selectedReasonFromServer=this.reasonsCopyFromServer.find(x=>x.reasoncode==this.selectedReason.reasoncode);   
 
+    if (selectedReasonFromServer && this.selectedReason.carrier== selectedReasonFromServer.carrier) {
+      return true;
+    }
+    // Otherwise ask the user with the dialog service and return its
+    // observable which resolves to true or false when the user decides
+    return this.dialogService.confirm('Discard changes?');
+  }
   resonCodeList() {
   this.adminService.reasonCodeList().subscribe((data) => {
       this.reasons = data;
