@@ -9,6 +9,7 @@ import { Observable, fromEvent } from 'rxjs';
 
 import { Crisis }         from '../crisis';
 import { DialogService }  from '../../dialog.service';
+import { ModelDialogComponent } from 'src/app/model-dialog/model-dialog.component';
 declare var $: any;
 
 
@@ -21,8 +22,9 @@ declare var $: any;
 export class CrisisDetailComponent implements OnInit, AfterViewInit {
   crisis: Crisis;
   editName: string;
+  //Changed this
   @ViewChild('ModalPopUpForNavigation',{static: true}) 
-  input: ElementRef;
+  input: ModelDialogComponent;
   eventObservable: Observable<any>;
 
   constructor(
@@ -32,7 +34,6 @@ export class CrisisDetailComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    this.eventObservable = fromEvent<any>(this.input.nativeElement, 'btnClicked');
    }
 
   ngOnInit() {
@@ -53,21 +54,24 @@ export class CrisisDetailComponent implements OnInit, AfterViewInit {
     this.gotoCrises();
   }
 
+//Changed this
   canDeactivate(): Observable<boolean> | boolean {
     // Allow synchronous navigation (`true`) if no crisis or the crisis is unchanged
     if (!this.crisis || this.crisis.name === this.editName) {
       return true;
     }
     
-    //return this.dialogService.confirm(this.eventObservable, 'Discard changes?',);
-     $("#ModalPopUpForNavigation").modal('show');
-
-     this.eventObservable.subscribe(data => {
-      var results = data[1];
-      debugger;
-      return false;
-  });  
-}
+    return new Observable(
+      observer => {
+        $("#ModalPopUpForNavigation").modal('show');
+        this.input.confirmation.subscribe(x=>{
+          observer.next(true);
+        });  
+         this.input.close.subscribe(x=>{
+           observer.next(false);
+          }); 
+      });     
+  }
 
   gotoCrises() {
     let crisisId = this.crisis ? this.crisis.id : null;
