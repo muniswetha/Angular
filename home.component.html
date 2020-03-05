@@ -71,3 +71,10 @@
   </form>
   
   
+<button type="button"  data-toggle="modal" data-target="#ModalPopUpForNavigation" class="btn btn-info">cancel</button>
+<app-model-dialog #ModalPopUpForNavigation
+[divId]="'ModalPopUpForNavigation'" 
+[title]="'Confirmation'" 
+[infoMessage]="'Are you sure you want to Navigare?'"   
+[cnfBtnNames]="['Yes','No']"
+></app-model-dialog> 
