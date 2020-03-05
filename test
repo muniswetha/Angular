@@ -1,0 +1,82 @@
+import { Component, OnInit, HostBinding, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, fromEvent } from 'rxjs';
+
+import { Crisis }         from '../crisis';
+import { DialogService }  from '../../dialog.service';
+declare var $: any;
+
+
+
+@Component({
+  selector: 'app-crisis-detail',
+  templateUrl: './crisis-detail.component.html',
+  styleUrls: ['./crisis-detail.component.css']
+})
+export class CrisisDetailComponent implements OnInit, AfterViewInit {
+  crisis: Crisis;
+  editName: string;
+  @ViewChild('ModalPopUpForNavigation',{static: true}) 
+  input: ElementRef;
+  eventObservable: Observable<any>;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    public dialogService: DialogService
+  ) {}
+
+  ngAfterViewInit(): void {
+    this.eventObservable = fromEvent<any>(this.input.nativeElement, 'btnClicked');
+   }
+
+  ngOnInit() {
+    this.route.data
+      .subscribe((data: { crisis: Crisis }) => {
+        this.editName = data.crisis.name;
+        this.crisis = data.crisis;
+      });
+  }
+
+  cancel() {
+    $("#ModalPopUpForNavigation").modal('show');
+    //this.gotoCrises();
+  }
+
+  save() {
+    this.crisis.name = this.editName;
+    this.gotoCrises();
+  }
+
+  canDeactivate(): Observable<boolean> | boolean {
+    // Allow synchronous navigation (`true`) if no crisis or the crisis is unchanged
+    if (!this.crisis || this.crisis.name === this.editName) {
+      return true;
+    }
+    
+    //return this.dialogService.confirm(this.eventObservable, 'Discard changes?',);
+     $("#ModalPopUpForNavigation").modal('show');
+
+     this.eventObservable.subscribe(data => {
+      var results = data[1];
+      debugger;
+      return false;
+  });  
+}
+
+  gotoCrises() {
+    let crisisId = this.crisis ? this.crisis.id : null;
+    // Pass along the crisis id if available
+    // so that the CrisisListComponent can select that crisis.
+    // Add a totally useless `foo` parameter for kicks.
+    // Relative navigation back to the crises
+    this.router.navigate(['../', { id: crisisId, foo: 'foo' }], { relativeTo: this.route });
+  }
+}
+
+
+/*
+Copyright Google LLC. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that
+can be found in the LICENSE file at http://angular.io/license
+*/
