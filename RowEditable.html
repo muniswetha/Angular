@@ -1,0 +1,141 @@
+<form>
+    <div class="card" style="width: 80rem; height: 35rem;">
+        <h5 class="card-header">Vendor Holidays Maintenance</h5>
+        <div class="card-body">
+
+
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-2">
+                            Year
+                        </div>
+                        <div class="col-md-7">
+                            <!-- <p-dropdown #ddlyear
+                    name="ddlyear" 
+                    [(options)]="holidayMaintenanceList"  
+                    [(ngModel)]="selectedYear"                   
+                            optionLabel="year"> 
+                </p-dropdown>   -->
+                            <select                             
+                            class="form-control" 
+                            id="ddlyear" 
+                            [disabled]="isHolidayListUpdated"
+                            (change)="onYearSelected($event)"
+                            [ngModel]="selectedYear.year"
+                                name="ddlyear">
+                                <option></option>
+                                <option value={{h.year}} 
+                                *ngFor="let h of holidayMaintenanceList">
+                                    {{h.year}}
+                                </option>
+                            </select>
+
+
+
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-info btn-sm" 
+                            [disabled]="isHolidayListUpdated || isAddYearBtnDisabled"
+                            (click)=onAddYearClick(ddlyear)
+                            >Add
+                                Year</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <hr>
+
+            <div class="row" [hidden]="!selectedYear.year">               
+                <!-- (onRowSelect)="onRowSelect($event)" 
+                (onChange)="changeDetected($event)"-->
+                <p-table #holidayListTable  editMode="row" [alwaysShowPaginator]="false"  
+                [value]="getHolidayListByYear()"  dataKey="id"
+                    [paginator]="true" [rows]="7"                     
+                   >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Holiday Date</th>
+                            <th>Description</th>
+                            <th style="width:8em">Action</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-editing="editing" let-rowData  let-ri="rowIndex">
+                        <tr [pEditableRow]="rowData" [ngClass]="{'bg-danger' : rowData.isUpdate || rowData.isNewelyAdded}">
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">                                        
+                                        <p-calendar name="calRowDataDate" 
+                                        [(ngModel)]="rowData.date" 
+                                        [showIcon]="true">
+                                        </p-calendar>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{rowData.date | date: 'dd/MM/yyyy'}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" name="txtRowDataDesc" 
+                                            [(ngModel)]="rowData.description">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{rowData.description}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td style="text-align:center">
+                                <button *ngIf="!editing" pButton type="button" pInitEditableRow icon="pi pi-pencil" class="ui-button-info" (click)="onRowEditInit(rowData)" ></button>
+                                <button *ngIf="!editing" pButton data-toggle="modal" data-target="#ModalPopUpForDelete"  type="button" icon="pi pi-pencil"
+                                    class="ui-button-danger" 
+                                    (click)="onRowDelete(rowData)"
+                                    ></button>
+                                <button *ngIf="editing" pButton type="button" pSaveEditableRow icon="pi pi-check" class="ui-button-success" style="margin-right: .5em" (click)="onRowEditSave(rowData, ri)" ></button>
+                                <button *ngIf="editing" pButton type="button" pCancelEditableRow icon="pi pi-times" class="ui-button-danger" (click)="onRowEditCancel(rowData, ri)" ></button>
+                                
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                <div *ngIf="selectedYear.year && getHolidayListByYear().length == 0">No Records Found</div>
+
+                <div>
+                    <app-delete-dialog-box #ModalPopUpForDelete [divId]="'ModalPopUpForDelete'"
+                     ></app-delete-dialog-box>
+                </div>
+                
+
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div>
+                        <button type="button" class="btn btn-info btn-sm" [disabled]="shouldDisableAddRow" (click)="onAddRow($event)">Add
+                            Row</button>&nbsp;
+                        <button type="button" [disabled]="!isHolidayListUpdated" class="btn btn-primary" (click)="onSaveClick()">Save</button>&nbsp;
+                       
+                        <button type="button" [disabled]="!isHolidayListUpdated"  
+                        data-toggle="modal" data-target="#ModalPopUpForReset"
+                        class="btn btn-secondary">Reset</button>
+                        
+                        &nbsp;
+                        <button type="button" class="btn btn-warning">Close</button>
+                    </div>
+                    <div>
+                        <app-delete-dialog-box #ModalPopUpForReset [divId]="'ModalPopUpForReset'"
+                        (confirmation)="resetHolidayList()"
+                         ></app-delete-dialog-box>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
