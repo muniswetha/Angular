@@ -17,6 +17,7 @@ declare var $: any;
 })
 export class VendorHolidayMaintenanceComponent implements OnInit {
   
+  public pageNo:number=0;
   isAddYearBtnDisabled:boolean;
   previousRowDataInEditMode:any;
   public selectedYear:VendorHolidayMaintenance=new VendorHolidayMaintenance();
@@ -132,9 +133,7 @@ onDelete(rowData, index: number){
 
 
 
-changeDetected(event) {
-  debugger;
-}
+
   onAddRow(event){
  
     var vendorHoliday = new VendorHolidayList();
@@ -146,6 +145,12 @@ changeDetected(event) {
     this.checkAndToggleSaveAndResetButton();
     this.shouldDisableAddRow = true;  
     this.holidayListTable.initRowEdit(vendorHoliday);
+    //pagination
+    this.holidayListTable.first=Math.floor(this.holidayListTable.totalRecords/this.holidayListTable.rows)*this.holidayListTable.rows;
+    this.holidayListTable.firstChange.emit(this.holidayListTable.first);
+  
+
+
   }
 
   getHolidayListByYear() {
@@ -186,11 +191,15 @@ checkAndToggleSaveAndResetButton(){
 //  }
 
 resetHolidayList() {
+  if(this.selectedYear.id){
   var holidayListCopyFromServer = this.holidayMaintenanceListCopyFromServer.find(x=>x.year == this.selectedYear.year);
   this.selectedYear.holidayList = JSON.parse(JSON.stringify(holidayListCopyFromServer.holidayList));
   this.selectedYear.holidayList.forEach(x=>{
     x.date = new Date(x.date);
   });
+}else{
+  this.selectedYear.holidayList=[];
+}
   this.checkAndToggleSaveAndResetButton();
 }
 
@@ -207,3 +216,4 @@ resetHolidayList() {
 
 
 }
+
