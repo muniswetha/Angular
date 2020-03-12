@@ -1,0 +1,58 @@
+ts delete
+======================= 
+ @ViewChild("ModalPopUpForDelete",{static: true})
+  modalPopUpForDelete:DeleteDialogBoxComponent;
+
+
+onRowDelete(rowData){
+      $('#ModalPopUpForDelete').modal('show');
+      return this.modalPopUpForDelete.confirmation.subscribe(() => {
+        if(rowData.isNewelyAdded){
+          this.selectedYear.holidayList = this.selectedYear.holidayList.filter(x=>x.id != rowData.id);
+        } else{
+          this.selectedYear.holidayList.find(x=>x.id == rowData.id).isDeleted = true;
+        }
+        this.checkAndToggleSaveAndResetButton();
+      });
+}
+
+
+Html delete
+=============================
+  <button pButton data-toggle="modal" data-target="#ModalPopUpForDelete"  type="button" icon="pi pi-pencil"
+                                    class="ui-button-danger" 
+                                    (click)="onRowDelete(rowData)"
+                                    ></button>
+
+ <div>
+                    <app-delete-dialog-box #ModalPopUpForDelete [divId]="'ModalPopUpForDelete'"
+                     ></app-delete-dialog-box>
+                </div>
+====================================================================================================
+<ng-template pTemplate="input">                                        
+                                        <p-calendar name="calRowDataDate" 
+                                        [(ngModel)]="rowData.date" 
+                                        [showIcon]="true"
+                                        (ngModelChange)="OnRowEdited(rowData)">
+                                        </p-calendar>
+                                    </ng-template>
+
+========================
+OnRowEdited(rowData)
+{
+  if(!rowData.isNewelyAdded){
+    var holidayListCopyFromServer = this.holidayMaintenanceListCopyFromServer.find(x=>x.year == this.selectedYear.year);
+    var holidayCopyFromServer = holidayListCopyFromServer.holidayList.find(x=>x.id == rowData.id);
+    rowData.isUpdate = new Date(holidayCopyFromServer.date).toLocaleDateString() != new Date(rowData.date).toLocaleDateString() || holidayCopyFromServer.description != rowData.description;
+  } else{
+    debugger;
+      this.shouldDisableAddRow = rowData.date == undefined || rowData.description == undefined || rowData.description.trim()=="";
+  }
+  this.checkAndToggleSaveAndResetButton();
+}
+
+
+==============================================
+
+
+
