@@ -1,0 +1,364 @@
+<form>
+    <div class="card">
+        <div class="card-header">
+            Client Override
+        </div>
+
+
+        <div class="card-body">
+
+            <fieldset class="border p-2">
+                <legend class="w-auto">Override Level</legend>
+
+                <div class="row">
+                    <div class="col-md-3">
+
+
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input #optionsRadios1 type="radio" 
+                                    class="form-check-input" 
+                                    name="optionsRadios" 
+                                    id="optionsRadios1"
+                                    value="option1" 
+                                    checked=""
+                                    (click)="onOverrideChange($event)"                                    
+                                    >
+                                Acc
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2"
+                                    value="option2"
+                                    (click)="onOverrideChange($event)">
+                                Acc/Branch
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios3"
+                                    value="option3"
+                                    (click)="onOverrideChange($event)">
+                                Acc/Benopt/Branch
+                            </label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-3">
+
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios4"
+                                    value="option4"
+                                    (click)="onOverrideChange($event)"
+                                    >
+                                Acc/Ben opt
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios5"
+                                    value="option5"
+                                    (click)="onOverrideChange($event)">
+                                Acc/Ben opt/Network
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios6"
+                                    value="option6"
+                                    (click)="onOverrideChange($event)">
+                                Acc/Benopt/Branch/Network
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-2">                      
+                                <label class="col-form-label col-form-label-sm" for="exampleSelect1">Acct</label>
+                            </div>
+                            <div class="col-md-10">
+                                <select class="form-control" 
+                                id="exampleSelect1"  name="exampleSelect1"                               
+                                [(ngModel)]="overrideLevelDds.Acc.selectedValue"
+                                (change)="resetOverrideLeveDropdowns(overrideLevelDds.Acc.hierarchy)">
+                                    <option></option>
+                                    <option value=1>aa</option>
+                                    <option value=3>ab</option>
+                                    <option value=4>bc</option>
+                                    <option value=5>cd</option>                                   
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2">                                
+                                <label class="col-form-label col-form-label-sm" for="exampleSelect2"
+                                [hidden]="!shouldDisplayBenOptDD">Ben opt</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control" id="exampleSelect2" name="exampleSelect2"
+                                [hidden]="!shouldDisplayBenOptDD"
+                                [disabled]="!overrideLevelDds.Acc.selectedValue"
+                                [(ngModel)]="overrideLevelDds.BenOpt.selectedValue"
+                                (change)="resetOverrideLeveDropdowns(overrideLevelDds.BenOpt.hierarchy)">
+                                <option></option>
+                                <option value=1>BenOpt1</option>
+                                <option value=2>BenOpt2</option>
+                                <option value=3>BenOpt3</option>
+                                <option value=4>BenOpt4</option>   
+                                </select>
+                            </div>
+                            <div class="col-md-2">                                
+                                <label class="col-form-label col-form-label-sm" for="exampleSelect3"
+                                [hidden]="!shouldDisplayNetworkDD">Network</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control" id="exampleSelect3" name="exampleSelect3"
+                                [hidden]="!shouldDisplayNetworkDD"
+                                [disabled]="!(overrideLevelDds.Acc.selectedValue && 
+                                (!shouldDisplayBenOptDD || (shouldDisplayBenOptDD && overrideLevelDds.BenOpt.selectedValue))
+                                && (!shouldDisplayBranchDD || (shouldDisplayBranchDD && overrideLevelDds.Branch.selectedValue)))"
+                                [(ngModel)]="overrideLevelDds.Network.selectedValue"
+                                (change)="resetOverrideLeveDropdowns(overrideLevelDds.Network.hierarchy)">
+                                <option></option>
+                                <option value=1>Network1</option>
+                                <option value=2>Network2</option>
+                                <option value=3>Network3</option>
+                                <option value=4>Network4</option>   
+                                </select>
+                            </div>
+
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2">
+                               
+                                <label class="col-form-label col-form-label-sm" for="exampleSelect4"
+                                [hidden]="!shouldDisplayBranchDD">Branch</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control" id="exampleSelect4" name="exampleSelect4"
+                                [hidden]="!shouldDisplayBranchDD"
+                                [disabled]="!(overrideLevelDds.Acc.selectedValue && 
+                                            (!shouldDisplayBenOptDD || (shouldDisplayBenOptDD && overrideLevelDds.BenOpt.selectedValue)))"
+                                [(ngModel)]="overrideLevelDds.Branch.selectedValue"
+                                (change)="resetOverrideLeveDropdowns(overrideLevelDds.Branch.hierarchy)">
+                                <option></option>
+                                <option value=1>Branch1</option>
+                                <option value=2>Branch2</option>
+                                <option value=3>Branch3</option>
+                                <option value=4>Branch4</option>   
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+
+                            </div>
+                            <div class="col-md-4">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="row">
+                <div class="col-md-1">
+                    <fieldset class="border p-2">
+                        <legend class="w-auto">Read Only Data</legend>
+                        <div class="row">
+                            <div class="col-md-3">
+
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" name="optionsRadios1"
+                                            id="optionsRadios7" value="option1" >
+                                        Current
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" name="optionsRadios1"
+                                            id="optionsRadios8" value="option2" checked="">
+                                        Latest(future)
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-11">
+                    <fieldset class="border p-2" [hidden]="!overrideLevelDds.Acc.selectedValue">
+                        <legend 
+                        class="w-auto">Misc Account-Benfit option level client data (read only data)</legend>
+                        <div class="row">
+                           <div class="col-md-2" hidden>
+                            <label class="col-form-label col-form-label-sm" for="txt1">Card Level</label>
+                            <input class="form-control form-control-sm" type="text" id="txt1"> 
+                           </div>
+                           <div class="col-md-2" hidden>
+                            <label class="col-form-label col-form-label-sm" for="txt2">NSP Ind</label>
+                            <input class="form-control form-control-sm" type="text" id="txt2"> 
+                           </div>
+                           <div class="col-md-2" [hidden]="!overrideLevelDds.Acc.selectedValue">
+                            <label class="col-form-label col-form-label-sm" for="txt3">CustServ.PhoneNum</label>
+                            <input class="form-control form-control-sm" type="text" id="txt3"> 
+                           </div>
+                           <div class="col-md-2" hidden>
+                            <label class="col-form-label col-form-label-sm" for="txt4">ASO</label>
+                            <input class="form-control form-control-sm" type="text" id="txt4"> 
+                           </div>
+                           <div class="col-md-2" hidden>
+                            <label class="col-form-label col-form-label-sm" for="txt5">Hide RX Amt</label>
+                            <input class="form-control form-control-sm" type="text" id="txt5"> 
+                           </div>
+                           <div class="col-md-2" [hidden]="!overrideLevelDds.Acc.selectedValue">
+                            <label class="col-form-label col-form-label-sm" for="txt6">CBH Phone No</label>
+                            <input class="form-control form-control-sm" type="text" id="txt6"> 
+                           </div>
+                           <div class="col-md-2" [hidden]="!overrideLevelDds.Acc.selectedValue">
+                            <label class="col-form-label col-form-label-sm" for="txt7">Acc Eff Date</label>
+                            <input class="form-control form-control-sm" type="text" id="txt7"> 
+                           </div>
+                           <div class="col-md-2" hidden>
+                            <label class="col-form-label col-form-label-sm" for="txt8">Product Class/Branding</label>
+                            <input class="form-control form-control-sm" type="text" id="txt8"> 
+                           </div>
+                           <div class="col-md-2" hidden>
+                            <label class="col-form-label col-form-label-sm" for="txt9">Contract Sale</label>
+                            <input class="form-control form-control-sm" type="text" id="txt9"> 
+                           </div>
+                           <div class="col-md-2" [hidden]="!overrideLevelDds.Acc.selectedValue">
+                            <label class="col-form-label col-form-label-sm" for="txt10">ID Card Name</label>
+                            <input class="form-control form-control-sm" type="text" id="txt10"> 
+                           </div>
+                           <div class="col-md-2" [hidden]="!overrideLevelDds.Acc.selectedValue">
+                               <label class="col-form-label col-form-label-sm" for="txt11">Trans Migration code</label>
+                               <input class="form-control form-control-sm" type="text" id="txt11">
+                           </div>
+                        </div>
+                                           
+                    </fieldset>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-4" >
+                    <fieldset class="border p-2"  [hidden]="!overrideLevelDds.Acc.selectedValue">
+                        <legend class="w-auto">Log Assignment</legend>
+                        <div class="row">
+                            <p-table #LogoAssignmentTable  
+                            editMode="row" 
+                            [alwaysShowPaginator]="false"
+                            dataKey="id"  >
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Eff Date</th>
+                                        <th>End Date</th>
+                                        <th>Logo</th>
+                                        <th>
+                        <button type="button" class="btn btn-info btn-sm" 
+                                [disabled]="shouldDisableAddRow"                                
+                                (click)="onAddRow($event)">Add Row</button>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+
+                                <ng-template pTemplate="body" let-editing="editing" let-rowData  let-ri="rowIndex">
+                                    <tr [pEditableRow]="rowData">
+                                        <td>
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">                                        
+                                                    <p-calendar name="calRowDataDate" 
+                                                    [(ngModel)]="rowData.effdate" 
+                                                    [showIcon]="true">
+                                                    </p-calendar>
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{rowData.effdate | date: 'dd/MM/yyyy'}}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td>
+                                            <p-cellEditor>
+                                           
+                                            </p-cellEditor>
+                                        </td>
+                                        <td></td>
+                                        <td style="text-align:center">
+                                            <button *ngIf="!editing" pButton type="button" pInitEditableRow icon="pi pi-pencil" class="ui-button-info"  ></button>
+                                            <button *ngIf="!editing" pButton                                             
+                                            type="button" icon="pi pi-pencil"
+                                                class="ui-button-danger" 
+                                                (click)="onRowDelete(rowData)"
+                                                ></button>
+                                            <button *ngIf="editing" pButton type="button" pSaveEditableRow icon="pi pi-check" class="ui-button-success" style="margin-right: .5em"  ></button>
+                                            <button *ngIf="editing" pButton type="button" pCancelEditableRow icon="pi pi-times" class="ui-button-danger"  ></button>
+                                            
+                                        </td>
+                                    </tr>
+                                </ng-template>
+
+                            </p-table>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="col-md-4">
+
+                </div>
+
+                <div class="col-md-4">                    
+                    <fieldset class="border p-2"  [hidden]="!overrideLevelDds.Acc.selectedValue">
+                        <legend class="w-auto ">Suppress SSN</legend>
+                        <div class="row">
+                            <p-table #LogoAssignmentTable  editMode="row" [alwaysShowPaginator]="false"  >
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Eff Date</th>
+                                        <th>End Date</th>
+                                        <th>Logo</th>
+                                        <th>Add Roww</th>
+                                    </tr>
+                                </ng-template>                             
+                            </p-table>
+                        </div>
+                    </fieldset>
+                </div>                
+            </div>
+
+            <div class="row">
+                <div class="col-md-10">
+                    <fieldset class="border p-2" hidden>
+                        <legend class="w-auto">Template Overrides</legend>
+                    </fieldset>
+                </div>
+                <div class="col-md-2">
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-10">
+                    <fieldset class="border p-2" hidden>
+                        <legend class="w-auto">ET State Overrides</legend>
+                    </fieldset>
+                </div>
+                <div class="col-md-2">
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+    </div>
+</form>
